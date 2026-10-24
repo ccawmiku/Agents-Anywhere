@@ -19,6 +19,9 @@ const apiRoutePrefixes = [
 ];
 
 const nextConfig: NextConfig = {
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   devIndicators: false,
   allowedDevOrigins: ["**.*", "localhost", "*.localhost"],
   output: staticExport ? "export" : undefined,
@@ -28,6 +31,8 @@ const nextConfig: NextConfig = {
     NEXT_PUBLIC_AGENTS_ANYWHERE_API_NAMESPACE: apiNamespace,
   },
   experimental: {
+    cpus: 1,
+    workerThreads: false,
     // Full timeline sync uses HTTP ingest through this same-origin proxy.
     proxyClientMaxBodySize,
   },

@@ -13,7 +13,16 @@ import { canonicalJson, digest } from './identity.js'
 import { BridgeError } from './errors.js'
 import { record } from './types.js'
 
-export const IMAGE_MIME_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'] as const
+export const IMAGE_MIME_TYPES = [
+  'image/png',
+  'image/jpeg',
+  'image/webp',
+  'image/gif',
+  'image/heic',
+  'image/heif',
+  'image/avif',
+  'image/tiff',
+] as const
 
 /** lstat, so a symbolic link counts as present and is then refused by the staging checks. */
 async function exists(path: string): Promise<boolean> {

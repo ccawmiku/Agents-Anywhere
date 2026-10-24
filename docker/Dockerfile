@@ -1,23 +1,3 @@
-FROM node:22-bookworm-slim AS web-static
-
-ARG YARN_REGISTRY=
-
-ENV NODE_ENV=production \
-    NEXT_TELEMETRY_DISABLED=1 \
-    NEXT_OUTPUT=export \
-    AGENTS_ANYWHERE_API=
-
-WORKDIR /app/web-next
-
-COPY web-next/package.json web-next/.yarnrc.yml ./
-RUN corepack enable \
-    && if [ -n "$YARN_REGISTRY" ]; then yarn config set npmRegistryServer "$YARN_REGISTRY"; fi \
-    && YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
-
-COPY web-next ./
-RUN yarn build
-
-
 FROM python:3.12-slim AS server
 
 ARG APT_MIRROR=
@@ -42,11 +22,12 @@ RUN if [ -n "$APT_MIRROR" ]; then \
     && pip install --no-cache-dir uv
 
 COPY server/pyproject.toml ./server/
+COPY server/httpx_s3_client_pkg ./server/httpx_s3_client_pkg
 RUN if [ -n "$PIP_INDEX_URL" ]; then export UV_INDEX_URL="$PIP_INDEX_URL"; fi \
     && cd server && uv sync --no-dev --no-install-project
 
 COPY server ./server
-COPY --from=web-static /app/web-next/out ./web-static
+COPY web-next/out ./web-static
 
 RUN mkdir -p /data
 VOLUME ["/data"]

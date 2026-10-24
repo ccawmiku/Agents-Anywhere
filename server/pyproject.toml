@@ -34,4 +34,4 @@ dev = [
 pythonpath = ["."]
 
 [tool.uv.sources]
-httpx-s3-client = { git = "https://github.com/t4wefan/httpx-s3-client.git" }
+httpx-s3-client = { path = "./httpx_s3_client_pkg" }
